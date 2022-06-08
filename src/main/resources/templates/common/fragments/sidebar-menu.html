@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <!--/*@thymesVar id="link" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="icon" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="activeMenuItem" type="java.lang.String"*/-->
+    <li th:fragment="nav-item(link, title, icon)" class="nav-item">
+        <a class="nav-link" aria-current="page" th:href="${link}"
+            th:classappend="${title == activeMenuItem}? 'active' : ''">
+            <i th:classappend="${icon}" class="me-1"></i>
+            [[${title}]]
+        </a>
+    </li>
+
+    <div th:fragment="menu" class="position-sticky pt-3">
+        <h6 class="sidebar-heading text-muted text-uppercase mb-1 mt-3 px-3">References</h6>
+        <ul class="nav flex-column">
+            <li th:replace="~{common/fragments/sidebar-menu :: nav-item(link='/items', title='Items', icon='bi-folder')}"></li>
+        </ul>
+        <ul class="nav flex-column">
+            <li th:replace="~{common/fragments/sidebar-menu :: nav-item(link='/warehouses', title='Warehouses', icon='bi-folder')}"></li>
+        </ul>
+        <h6 class="sidebar-heading text-muted text-uppercase mb-1 mt-3 px-3">Recorders</h6>
+        <ul class="nav flex-column">
+            <li th:replace="~{common/fragments/sidebar-menu :: nav-item(link='/receipts', title='Receipts', icon='bi-folder2')}"></li>
+        </ul>
+        <ul class="nav flex-column">
+            <li th:replace="~{common/fragments/sidebar-menu :: nav-item(link='/purchases', title='Purchases', icon='bi-folder2')}"></li>
+        </ul>
+        <ul class="nav flex-column">
+            <li th:replace="~{common/fragments/sidebar-menu :: nav-item(link='/transfers', title='Transfers', icon='bi-folder2')}"></li>
+        </ul>
+        <h6 class="sidebar-heading text-muted text-uppercase mb-1 mt-3 px-3">Reports</h6>
+        <ul class="nav flex-column">
+            <li th:replace="~{common/fragments/sidebar-menu :: nav-item(link='/reports/items-balance', title='Items balance', icon='bi-file-text')}"></li>
+        </ul>
+    </div>
+
+</html>

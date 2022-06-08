@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{common/layout/layout}"
+        th:with="activeMenuItem='Items'">
+<head>
+    <title>Items</title>
+</head>
+<body>
+<div layout:fragment="page-content">
+
+    <div th:replace="~{common/fragments/header :: list-caption(title='Items', buttonText='Add Item', buttonRef='/items/new')}">
+    </div>
+
+    <table id="table-list" class="table table-hover display" style="width: 100%">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col" style="width: 48px"></th>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+<th:block layout:fragment="page-scripts">
+    <script>
+        $(document).ready(function () {
+            $('#table-list').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '/items/table',
+                columns: [
+                    { data: 'name' },
+                    {
+                        data: 'id',
+                        orderable: false,
+                        render: function (data, type) {
+                            if (type === 'display') {
+                                return "<a href=items/" + data + ">" +
+                                    "<i class='text-secondary opacity-75 bi-pencil-square'></i>" +
+                                    "</a>";
+                            }
+                            return data;
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+</th:block>
+
+</body>
+</html>

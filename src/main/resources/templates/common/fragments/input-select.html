@@ -1,0 +1,48 @@
+<html lang="en">
+<!--/*@thymesVar id="label" type="java.lang.String"*/-->
+<!--/*@thymesVar id="id" type="java.lang.String"*/-->
+<!--/*@thymesVar id="name" type="java.lang.String"*/-->
+<!--/*@thymesVar id="ref" type="java.lang.String"*/-->
+<!--/*@thymesVar id="valid" type="java.lang.Boolean"*/-->
+
+<th:block th:fragment="params(label, id, name, ref)"
+          th:with="valid=${!#fields.hasErrors(id)}">
+    <input type="hidden" th:field="*{__${id}__}" th:errorclass="is-invalid"> <!--th:id="${id}" th:name="${id}" th:value="*{__${id}__}">-->
+    <input type="hidden" th:field="*{__${name}__}"> <!--th:id="${name}" th:name="${name}" th:value="*{__${name}__}">-->
+    <label class="form-label" th:if="${!label.isEmpty()}"
+           th:for="|${id}_text|" th:text="${label}"></label>
+    <div class="input-group">
+        <input class="form-control" th:id="|${id}_text|" th:value="*{__${name}__}"
+            th:classappend="${!valid}? 'is-invalid'">
+        <span class="input-group-text" th:id="|${id.replaceAll('[^\w]', '')}_clear|" style="cursor: pointer">x</span>
+    </div>
+    <div class="invalid-feedback" th:if="${!valid}" th:errors="*{__${id}__}"></div>
+    <script>
+        $(document).ready(function() {
+            const textInput       = $("input[id='" + "[[|${id}_text|]]" + "']");
+            const hiddenIdInput   = $("input[id='" + "[[|${id.replaceAll('[^\w.]', '')}|]]" + "']"); //$("input[id='" + "[[|${id}|]]" + "']");
+            const hiddenNameInput = $("input[id='" + "[[|${name.replaceAll('[^\w.]', '')}|]]" + "']"); //$("input[id='" + "[[|${name}|]]" + "']");
+            textInput.autocomplete({
+                source: "[[${ref}]]",
+                delay: 250,
+                select: function( event, ui ) {
+                    hiddenIdInput.val(ui.item.id);
+                    hiddenNameInput.val(ui.item.value);
+                },
+                close: function( event, ui ) {
+                    const oe = event.originalEvent;
+                    if ((oe.type === 'blur') || (oe.type === 'keydown' && event.key === 'Escape')) {
+                        textInput.val(hiddenNameInput.val());
+                    }
+                }
+            });
+            $("[[|#${id.replaceAll('[^\w]', '')}_clear|]]").on("click", function() {
+                textInput.val('');
+                hiddenIdInput.val(null);
+                hiddenNameInput.val('');
+            });
+        })
+    </script>
+</th:block>
+
+</html>
